@@ -1,0 +1,18 @@
+Found conflicts! Looking for incompatible packages.
+This can take several minutes.  Press CTRL-C to abort.
+failed
+
+UnsatisfiableError: The following specifications were found
+to be incompatible with the existing python installation in your environment:
+
+Specifications:
+
+  - gdcm -> python[version='2.7.*|3.5.*|3.6.*|3.4.*']
+
+Your python: python=3.7
+
+If python is on the left-most side of the chain, that's the version you've asked for.
+When python appears to the right, that indicates that the thing on the left is somehow
+not available for the python version you are constrained to. Note that conda will not
+change your python version to a different minor version unless you explicitly specify
+that.
