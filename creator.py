@@ -12,7 +12,7 @@ import os
 import json
 import string
 
-filename = 'dicomImage.dcm'
+filename = 'testDicom.dcm'
 
 #get pixel data from image
 ds = pydicom.read_file(filename)
@@ -64,13 +64,13 @@ noTextImages.append(ImageOps.mirror(image))
 noTextImages.append(ImageOps.mirror(ImageOps.flip(image)))
 
 
-fonts = [ImageFont.truetype('Fonts/' + font, int(image.width/35)) for font in os.listdir('Fonts')]
+fonts = [ImageFont.truetype('Fonts/' + font, int(image.width/3)) for font in os.listdir('Fonts')]
 colors = ['white', 'orange', 'gray', 'green', 'red']
 textLocations = [
-{'x': 50, 'y': 50, 'anchor': 'NW'},
-{'x': 50, 'y': image.height - 50, 'anchor': 'SW'},
-{'x': image.width - 50, 'y': 50, 'anchor': 'NE'},
-{'x': image.width - 50, 'y': image.height - 50, 'anchor': 'SE'},
+{'x': image.width/20, 'y': image.height/20, 'anchor': 'NW'},
+{'x': image.width/20, 'y': image.height - image.height/20, 'anchor': 'SW'},
+{'x': image.width - image.width/20, 'y': image.height/20, 'anchor': 'NE'},
+{'x': image.width - image.width/20, 'y': image.height - image.height/20, 'anchor': 'SE'},
 ]
 textOptions = {
 'Patient Name: ': [True, '* *', '*, *'],
@@ -87,7 +87,7 @@ textOptions = {
 }
 
 for imageNum in range(3):
-    new_img = image.copy()
+    new_img = image.copy().resize((image.width * 10, image.height * 10), Image.BILINEAR)
     draw = ImageDraw.Draw(new_img)
     data = []
     usedTextLocations = []
@@ -97,8 +97,8 @@ for imageNum in range(3):
         textLocation = textLocations[random.randint(0, len(textLocations) - 1)]
         if not textLocation in usedTextLocations:
             usedTextLocations.append(textLocation)
-            x = textLocation['x']
-            y = textLocation['y']
+            x = textLocation['x'] * 10
+            y = textLocation['y'] * 10
             usedTextOptions = []
             text = ''
             for textLines in range(random.randint(1, 4)):
@@ -137,7 +137,7 @@ for imageNum in range(3):
             bbox = {'x0': x, 'y0': y, 'x1': x + width, 'y1': y + width}
             data.append({'bbox': bbox, 'text': text})
 
-    textImages.append([new_img, data])
+    textImages.append([new_img.resize((image.width, image.height), Image.BILINEAR), data])
 
 
 for image in range(len(textImages)):
