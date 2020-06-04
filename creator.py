@@ -12,7 +12,7 @@ import os
 import json
 import string
 
-filename = 'testDicom.dcm'
+filename = 'dicomImage.dcm'
 
 #get pixel data from image
 ds = pydicom.read_file(filename)
@@ -63,6 +63,13 @@ noTextImages.append(ImageOps.flip(image))
 noTextImages.append(ImageOps.mirror(image))
 noTextImages.append(ImageOps.mirror(ImageOps.flip(image)))
 
+for imageIndex in range(len(noTextImages)):
+    try:
+        os.mkdir('Output Images/No Text/' + str(len(os.listdir('Output Images/No Text'))))
+    except:
+        print('New directory not created')
+
+    noTextImages[imageIndex].save('Output Images/No Text/' + str(imageIndex) + '/finalImage.jpg')
 
 fonts = [ImageFont.truetype('Fonts/' + font, int(image.width/3)) for font in os.listdir('Fonts')]
 colors = ['white', 'orange', 'gray', 'green', 'red']
@@ -139,13 +146,12 @@ for imageNum in range(3):
 
     textImages.append([new_img.resize((image.width, image.height), Image.BILINEAR), data])
 
-
-for image in range(len(textImages)):
+for imageIndex in range(len(textImages)):
     try:
-        os.mkdir('Output Images/' + str(image))
+        os.mkdir('Output Images/Text/' + str(len(os.listdir('Output Images/Text'))))
     except:
         print('New directory not created')
 
-    textImages[image][0].save('Output Images/' + str(image) + '/finalImage.jpg')
-    with open('Output Images/' + str(image) + '/data.json', 'w+') as file:
-        json.dump(textImages[image][1], file)
+    textImages[imageIndex][0].save('Output Images/Text/' + str(imageIndex) + '/finalImage.jpg')
+    with open('Output Images/Text/' + str(imageIndex) + '/data.json', 'w+') as file:
+        json.dump(textImages[imageIndex][1], file)
